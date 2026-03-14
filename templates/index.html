@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Practice Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-dim: #8b949e;
+            --green: #3fb950;
+            --yellow: #d29922;
+            --blue: #58a6ff;
+            --red: #f85149;
+            --purple: #bc8cff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container { max-width: 720px; margin: 0 auto; }
+
+        header {
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        h1 span { color: var(--green); }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* Add Task Form */
+        .add-form {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .add-form input {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .add-form input:focus { border-color: var(--blue); }
+
+        .add-form input::placeholder { color: var(--text-dim); }
+
+        .btn {
+            background: var(--green);
+            color: var(--bg);
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn:hover { opacity: 0.85; }
+
+        /* Task List */
+        .task-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .task:hover { border-color: var(--text-dim); }
+
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.15s;
+            min-width: 95px;
+            text-align: center;
+        }
+
+        .badge:hover { transform: scale(1.05); }
+
+        .badge.todo { background: rgba(88, 166, 255, 0.15); color: var(--blue); }
+        .badge.in-progress { background: rgba(210, 153, 34, 0.15); color: var(--yellow); }
+        .badge.done { background: rgba(63, 185, 80, 0.15); color: var(--green); }
+
+        .task-title {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .task-title.is-done {
+            text-decoration: line-through;
+            color: var(--text-dim);
+        }
+
+        .task-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+
+        .delete-btn:hover { color: var(--red); background: rgba(248, 81, 73, 0.1); }
+
+        /* Stats Bar */
+        .stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .stat { display: flex; align-items: center; gap: 0.4rem; }
+        .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot.todo-dot { background: var(--blue); }
+        .dot.prog-dot { background: var(--yellow); }
+        .dot.done-dot { background: var(--green); }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Git tip banner */
+        .git-tip {
+            margin-top: 2.5rem;
+            padding: 1rem 1.2rem;
+            background: rgba(188, 140, 255, 0.08);
+            border: 1px solid rgba(188, 140, 255, 0.2);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .git-tip code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(188, 140, 255, 0.12);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            color: var(--purple);
+            font-size: 0.82rem;
+        }
+
+        .git-tip strong { color: var(--purple); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><span>$</span> git-practice-tracker</h1>
+            <p class="subtitle">A simple app to practice Git, GitHub & CI/CD workflows</p>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat">
+                <span class="dot todo-dot"></span>
+                {{ tasks | selectattr('status', 'equalto', 'todo') | list | length }} todo
+            </div>
+            <div class="stat">
+                <span class="dot prog-dot"></span>
+                {{ tasks | selectattr('status', 'equalto', 'in-progress') | list | length }} in progress
+            </div>
+            <div class="stat">
+                <span class="dot done-dot"></span>
+                {{ tasks | selectattr('status', 'equalto', 'done') | list | length }} done
+            </div>
+        </div>
+
+        <!-- Add Task -->
+        <form class="add-form" action="/add" method="POST">
+            <input type="text" name="title" placeholder="Add a new task..." required autocomplete="off">
+            <button type="submit" class="btn">+ Add</button>
+        </form>
+
+        <!-- Task List -->
+        <div class="task-list">
+            {% for task in tasks %}
+            <div class="task">
+                <form action="/update/{{ task.id }}" method="POST" style="display:inline;">
+                    <button type="submit" class="badge {{ task.status }}">{{ task.status }}</button>
+                </form>
+                <span class="task-title {% if task.status == 'done' %}is-done{% endif %}">
+                    {{ task.title }}
+                </span>
+                <span class="task-date">{{ task.created }}</span>
+                <form action="/delete/{{ task.id }}" method="POST" style="display:inline;">
+                    <button type="submit" class="delete-btn" title="Delete">✕</button>
+                </form>
+            </div>
+            {% endfor %}
+
+            {% if not tasks %}
+            <div class="empty-state">No tasks yet. Add one above!</div>
+            {% endif %}
+        </div>
+
+        <!-- Git Tip -->
+        <div class="git-tip">
+            <strong>💡 Tip:</strong> After making changes, run
+            <code>git status</code> to see what changed,
+            <code>git add .</code> to stage, and
+            <code>git commit -m "your message"</code> to save.
+        </div>
+    </div>
+</body>
+</html>
