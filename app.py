@@ -67,6 +67,9 @@ def health():
     """Health check endpoint for CI/CD pipeline."""
     return jsonify({"status": "healthy", "version": "1.0.1", "tasks_count": len(tasks)})
 
+@app.route("/stats")
+def stat():
+    return jsonify({"total": len(tasks)})
 
 @app.route("/api/tasks")
 def api_tasks():
