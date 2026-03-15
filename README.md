@@ -8,7 +8,7 @@ A simple task tracker app built to practice **Git commands**, **GitHub workflows
 
 ```bash
 # Clone the repo (after you push it to GitHub)
-git clone https://github.com/YOUR_USERNAME/flask-git-practice.git
+git clone https://github.com/Jeevitha-E8/flask-git-practice.git
 cd flask-git-practice
 
 # Create virtual environment
@@ -153,6 +153,7 @@ This project includes a GitHub Actions pipeline (`.github/workflows/ci.yml`) tha
 - **On every pull request** to `main`
 
 ### What it does:
+
 1. **Runs all tests** via `pytest`
 2. **Health check** — verifies `/health` endpoint works
 3. **Linting** — checks code style with `flake8`

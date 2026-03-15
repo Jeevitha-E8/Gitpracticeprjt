@@ -4,7 +4,7 @@ A simple task tracker to practice Git workflows and CI/CD.
 """
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from datetime import datetime
-
+from collections import Counter
 app = Flask(__name__)
 
 # In-memory task store (replace with DB later as practice)
@@ -37,7 +37,11 @@ def add_task():
         })
         next_id += 1
     return redirect(url_for("index"))
-
+def get_task_count():
+    return len(tasks)
+@app.route("/count",methods=["GET"])
+def count_task():
+    return jsonify({"tasks":get_task_count()})
 
 @app.route("/update/<int:task_id>", methods=["POST"])
 def update_status(task_id):
