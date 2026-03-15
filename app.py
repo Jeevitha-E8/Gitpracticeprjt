@@ -12,6 +12,7 @@ tasks = [
     {"id": 1, "title": "Learn git init & clone", "status": "done", "created": "2026-03-14"},
     {"id": 2, "title": "Practice git add & commit", "status": "in-progress", "created": "2026-03-14"},
     {"id": 3, "title": "Learn branching & merging", "status": "todo", "created": "2026-03-14"},
+    {"id": 4, "title": "testing", "status": "added", "created": "2026-03-15"},
 ]
 next_id = 4
 
@@ -60,7 +61,7 @@ def delete_task(task_id):
 @app.route("/health")
 def health():
     """Health check endpoint for CI/CD pipeline."""
-    return jsonify({"status": "healthy", "version": "1.0.0", "tasks_count": len(tasks)})
+    return jsonify({"status": "healthy", "version": "1.0.1", "tasks_count": len(tasks)})
 
 
 @app.route("/api/tasks")
